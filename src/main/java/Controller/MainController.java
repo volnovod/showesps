@@ -38,8 +38,8 @@ public class MainController {
         this.screen = screen;
         image.setLayoutX((screen.getWidth() - image.getFitWidth())/2);
         image.setLayoutY(((screen.getHeight() - image.getFitHeight())/2));
-        addButton.setLayoutX(screen.getWidth() - 200);
-        addButton.setLayoutY(screen.getHeight() - 200);
+        addButton.setLayoutX(screen.getWidth() - this.addButton.getPrefWidth() - 10);
+        addButton.setLayoutY(screen.getHeight() - this.addButton.getPrefHeight() - 50);
     }
 
     public Stage getPrimaryStage() {
