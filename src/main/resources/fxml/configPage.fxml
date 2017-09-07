@@ -43,21 +43,21 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="Password">
+                        <PasswordField promptText="Password">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
-                        </TextField>
+                        </PasswordField>
                         <TextField promptText="ExSSID">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="ExPassword">
+                        <PasswordField promptText="ExPassword">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
-                        </TextField>
+                        </PasswordField>
                      </children>
                   </VBox>
                   <VBox fx:id="simpleDevBox" prefHeight="200.0" prefWidth="200.0">
@@ -67,21 +67,16 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="group-id">
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </TextField>
                         <TextField promptText="ExSSID">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="ExPassword">
+                        <PasswordField promptText="ExPassword">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
-                        </TextField>
+                        </PasswordField>
                      </children>
                   </VBox>
                </children>
@@ -93,7 +88,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefWidth="80.0" text="Назад">
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" prefWidth="80.0" text="Назад">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

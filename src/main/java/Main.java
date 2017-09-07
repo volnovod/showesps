@@ -35,10 +35,12 @@ public class Main extends Application {
         MainController mainController = mainLoader.getController();
         ConfigController configController = configLoader.getController();
 
-        startController.setNextScene(mainScene);
+        startController.setMainScene(mainScene);
+        startController.setConfigScene(configScene);
         startController.setPrimaryStage(primaryStage);
 
         mainController.setPreviousScene(startScene);
+
         mainController.setPrimaryStage(primaryStage);
 
         configController.setPrimaryStage(primaryStage);

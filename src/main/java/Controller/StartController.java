@@ -1,5 +1,6 @@
 package Controller;
 
+import Https.HttpSender;
 import Model.Device;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 import java.net.*;
 import java.util.ArrayList;
@@ -31,13 +33,14 @@ public class StartController {
 
     private String deviceAddress;
     private String localAddress;
+    private String json;
     private List<InetAddress> ipList = new ArrayList<>();
     List<InetAddress> broadcastList = new ArrayList<>();
 
     private HttpURLConnection connection;
 
     private Stage primaryStage;
-    private Scene nextScene;
+    private Scene mainScene;
     private Scene configScene;
 
     @FXML
@@ -92,6 +95,8 @@ public class StartController {
         this.scanButton.setLayoutY(this.connectButton.getLayoutY());
         this.exitButton.setLayoutX(this.scanButton.getLayoutX() + this.scanButton.getWidth() + xStep);
         this.exitButton.setLayoutY(this.connectButton.getLayoutY());
+
+
     }
 
     public Stage getPrimaryStage() {
@@ -102,16 +107,16 @@ public class StartController {
         this.primaryStage = primaryStage;
     }
 
-    public Scene getNextScene() {
-        return nextScene;
+    public Scene getMainScene() {
+        return mainScene;
     }
 
-    public void setNextScene(Scene nextScene) {
-        this.nextScene = nextScene;
+    public void setMainScene(Scene nextScene) {
+        this.mainScene = nextScene;
     }
 
     @FXML
-    public void updateList(){
+    public void updateList() {
         setInterfacesList();
     }
 
@@ -141,10 +146,10 @@ public class StartController {
         if (ipList.size() > 0) {
             this.networkList.getItems().addAll(FXCollections.observableList(ipList));
             this.networkList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null){
+                if (newValue != null) {
                     this.scanButton.setDisable(false);
                     this.localAddress = this.ipList.get(this.networkList.getSelectionModel().getSelectedIndex()).getHostAddress();
-                }else {
+                } else {
                     this.scanButton.setDisable(true);
                 }
             });
@@ -154,10 +159,32 @@ public class StartController {
 
     @FXML
     public void connect() {
+        deviceAddress = deviceAddress.replaceAll("\\u0000", "");
+        Thread httpSender = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpSender sender =new HttpSender( deviceAddress, "who");
+                sender.send();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        resultProcess(sender.getResult());
+                    }
+                });
+            }
+        });
+        httpSender.start();
+    }
 
-        this.primaryStage.close();
-        this.primaryStage.setScene(this.nextScene);
-        this.primaryStage.show();
+    public void resultProcess(String result){
+        JSONObject jsonResult = new JSONObject(result);
+        if (jsonResult.get("id").equals("0")){
+            primaryStage.setScene(getConfigScene());
+            primaryStage.show();
+        } else if (!jsonResult.get("id").equals("0")){
+            primaryStage.setScene(getMainScene());
+            primaryStage.show();
+        }
     }
 
 

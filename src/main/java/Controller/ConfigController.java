@@ -28,6 +28,9 @@ public class ConfigController {
     private VBox simpleDevBox;
 
     @FXML
+    private Button backButton;
+
+    @FXML
     public void initialize(){
         ToggleGroup radioGroup = new ToggleGroup();
         this.mainDevRadioButton.setToggleGroup(radioGroup);
@@ -46,6 +49,17 @@ public class ConfigController {
                 }
             }
         });
+    }
+
+    @FXML
+    public void back(){
+        clearData();
+        primaryStage.setScene(getStartScene());
+        primaryStage.show();
+    }
+
+    private void clearData() {
+
     }
 
 
