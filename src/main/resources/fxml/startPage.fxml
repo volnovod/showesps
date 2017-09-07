@@ -6,10 +6,10 @@
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024" prefWidth="1280" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StartController">
    <children>
-      <Button fx:id="exitButton" layoutX="864.0" layoutY="761.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exit" prefWidth="200.0" text="Exit" />
-      <Button fx:id="scanButton" disable="true" layoutX="519.0" layoutY="761.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scanDevices" prefWidth="200.0" text="Scan" />
+      <Button fx:id="exitButton" layoutX="864.0" layoutY="761.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exit" prefWidth="200.0" text="Вихід" />
+      <Button fx:id="scanButton" disable="true" layoutX="519.0" layoutY="761.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scanDevices" prefWidth="200.0" text="Сканувати " />
       <TableView fx:id="devTable" layoutX="146.0" layoutY="48.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="320.0" prefWidth="945.0" />
-      <Button fx:id="connectButton" disable="true" layoutX="190.0" layoutY="761.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#connect" prefWidth="200.0" text="Connect" />
+      <Button fx:id="connectButton" disable="true" layoutX="190.0" layoutY="761.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#connect" prefWidth="200.0" text="Підключитися" />
       <ChoiceBox fx:id="networkList" layoutX="146.0" layoutY="416.0" onMouseClicked="#updateList" prefWidth="150.0" />
    </children>
 </Pane>

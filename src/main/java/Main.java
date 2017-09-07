@@ -40,10 +40,15 @@ public class Main extends Application {
 
         mainController.setPreviousScene(startScene);
         mainController.setPrimaryStage(primaryStage);
+
+        configController.setPrimaryStage(primaryStage);
+        configController.setStartScene(startScene);
+
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         mainController.setScreen(primaryScreenBounds);
         startController.setScreen(primaryScreenBounds);
+        configController.setScreen(primaryScreenBounds);
 
         //set Stage boundaries to visible bounds of the main screen
         primaryStage.setX(primaryScreenBounds.getMinX());
@@ -52,6 +57,7 @@ public class Main extends Application {
         primaryStage.setHeight(primaryScreenBounds.getHeight());
         primaryStage.setResizable(false);
         primaryStage.setScene(startScene);
+//        primaryStage.setScene(configScene);
         primaryStage.show();
 
 

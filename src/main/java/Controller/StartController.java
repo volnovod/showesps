@@ -133,7 +133,7 @@ public class StartController {
         idCol.setPrefWidth(this.devTable.getPrefWidth() * 0.2);
         idCol.setCellValueFactory(new PropertyValueFactory<Device, Integer>("id"));
 
-        TableColumn addressCol = new TableColumn("Address");
+        TableColumn addressCol = new TableColumn("Адреса");
         addressCol.setPrefWidth(this.devTable.getPrefWidth() * 0.8);
         addressCol.setCellValueFactory(new PropertyValueFactory<Device, String>("address"));
         devTable.getColumns().addAll(idCol, addressCol);
