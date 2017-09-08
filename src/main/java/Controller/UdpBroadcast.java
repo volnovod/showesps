@@ -27,6 +27,7 @@ public class UdpBroadcast implements Runnable {
         try {
             DatagramSocket socket = new DatagramSocket(SRC_PORT, InetAddress.getByName(localIp));
             byte[] msg = localIp.getBytes();
+            //
             DatagramPacket packet = new DatagramPacket(msg, msg.length, InetAddress.getByName(broadcastAddress), DST_PORT);
             socket.send(packet);
             socket.close();
