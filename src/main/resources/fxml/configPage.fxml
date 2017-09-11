@@ -28,32 +28,32 @@
                <children>
                   <VBox fx:id="mainDevBox" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <TextField promptText="id">
+                        <TextField fx:id="mainId" promptText="id">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="group-id">
+                        <TextField fx:id="groupId" promptText="group-id">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="SSID">
+                        <TextField fx:id="ssid" promptText="SSID">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <PasswordField promptText="Password">
+                        <PasswordField fx:id="password" promptText="Password">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </PasswordField>
-                        <TextField promptText="ExSSID">
+                        <TextField fx:id="existingSsid" promptText="ExSSID">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <PasswordField promptText="ExPassword">
+                        <PasswordField fx:id="existingPassword" promptText="ExPassword">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
@@ -62,17 +62,17 @@
                   </VBox>
                   <VBox fx:id="simpleDevBox" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <TextField promptText="id">
+                        <TextField fx:id="simpleId" promptText="id">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField promptText="ExSSID">
+                        <TextField fx:id="simpleExistingSsid" promptText="ExSSID">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <PasswordField promptText="ExPassword">
+                        <PasswordField fx:id="simpleExistingPassword" promptText="ExPassword">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
@@ -83,7 +83,7 @@
             </HBox>
             <HBox alignment="CENTER_RIGHT">
                <children>
-                  <Button disable="true" mnemonicParsing="false" prefWidth="80.0" text="Зберегти">
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#save" prefWidth="80.0" text="Зберегти">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

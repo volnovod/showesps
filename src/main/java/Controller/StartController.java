@@ -1,5 +1,6 @@
 package Controller;
 
+import Https.HTTPReceiver;
 import Https.HttpSender;
 import Model.Device;
 import javafx.application.Platform;
@@ -42,6 +43,7 @@ public class StartController {
     private Stage primaryStage;
     private Scene mainScene;
     private Scene configScene;
+    private ConfigController configController;
 
     @FXML
     private Pane pane;
@@ -61,6 +63,10 @@ public class StartController {
 
     @FXML
     private ChoiceBox networkList;
+
+    public void setConfigController(ConfigController configController) {
+        this.configController = configController;
+    }
 
     public Scene getConfigScene() {
         return configScene;
@@ -160,25 +166,23 @@ public class StartController {
     @FXML
     public void connect() {
         deviceAddress = deviceAddress.replaceAll("\\u0000", "");
-        Thread httpSender = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HttpSender sender =new HttpSender( deviceAddress, "who");
-                sender.send();
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        resultProcess(sender.getResult());
-                    }
-                });
-            }
+        Thread receiver = new Thread(() -> {
+            HTTPReceiver httpReceiver = new HTTPReceiver();
+            httpReceiver.receive();
+            Platform.runLater(() -> resultProcess(httpReceiver.getResult()));
         });
+        Thread httpSender = new Thread(() -> {
+            HttpSender sender =new HttpSender( deviceAddress, "who");
+            sender.send();
+        });
+        receiver.start();
         httpSender.start();
     }
 
     public void resultProcess(String result){
         JSONObject jsonResult = new JSONObject(result);
         if (jsonResult.get("id").equals("0")){
+            this.configController.setDeviceAddress(deviceAddress);
             primaryStage.setScene(getConfigScene());
             primaryStage.show();
         } else if (!jsonResult.get("id").equals("0")){
@@ -200,6 +204,7 @@ public class StartController {
         this.listener.setTableView(this.devTable);
         this.listener.setScanButton(this.scanButton);
         this.broadcast = new UdpBroadcast(this.localAddress);
+        this.listener.setLocalIp(this.localAddress);
         Thread udpBroadcast = new Thread(this.broadcast);
         Thread udpListner = new Thread(this.listener);
         udpListner.start();
@@ -222,7 +227,9 @@ public class StartController {
                     InetAddress inetAddress = ia.getAddress();
                     if (!inetAddress.isLoopbackAddress()) {
                         if (inetAddress.isSiteLocalAddress()) {
-                            ipList.add(inetAddress);
+                            if (!ipList.contains(inetAddress)){
+                                ipList.add(inetAddress);
+                            }
                             broadcastList.add(ia.getBroadcast());
 
                         }

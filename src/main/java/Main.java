@@ -34,6 +34,7 @@ public class Main extends Application {
         StartController startController = startLoader.getController();
         MainController mainController = mainLoader.getController();
         ConfigController configController = configLoader.getController();
+        startController.setConfigController(configController);
 
         startController.setMainScene(mainScene);
         startController.setConfigScene(configScene);

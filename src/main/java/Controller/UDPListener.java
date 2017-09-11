@@ -1,19 +1,20 @@
 package Controller;
 
 import Model.Device;
+import com.sun.javafx.collections.MappingChange;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class UDPListener implements Runnable {
 
-
+//    static Logger log = Logger.getLogger(UDPListener.class.getName());
     private final int SRC_PORT = 10054;
-
+    private String localIp;
     TableView<Device> tableView;
     Button scanButton;
 
@@ -33,10 +34,12 @@ public class UDPListener implements Runnable {
 
     public void listenedUdpResponce() throws Exception {
         MulticastSocket socket = new MulticastSocket(SRC_PORT);
+//        Logger lgg = Logger.getLogger(socket.getClass().getName());
         try   {
 
             byte[] receiveData = new byte[15];
-            socket.joinGroup(InetAddress.getByName("239.1.2.17"));
+            socket.joinGroup( new InetSocketAddress("239.1.2.17",SRC_PORT), getInterface());
+            System.out.println(socket.getInterface().getHostName());
             DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
             socket.setSoTimeout(2000);
             socket.receive(recievePacket);
@@ -61,7 +64,26 @@ public class UDPListener implements Runnable {
         }
     }
 
+    public NetworkInterface getInterface() throws SocketException {
+        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+
+        for (NetworkInterface netIf : Collections.list(nets)) {
+            for (InetAddress address: Collections.list(netIf.getInetAddresses())){
+                if (address.getHostAddress().equals(localIp)){
+                    System.out.println(netIf.getName());
+                    return netIf;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setLocalIp(String localIp) {
+        this.localIp = localIp;
+    }
+
     public void updateTable(String address){
+        address = address.replaceAll("\u0000", "");
         List<Device> list = new ArrayList<>();
         int id = this.tableView.getItems().size()+1;
         list.add(new Device(id, address));
