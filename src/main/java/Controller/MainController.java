@@ -1,5 +1,6 @@
 package Controller;
 
+import Https.HTTPReceiver;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ public class MainController {
     private Stage primaryStage;
     private Scene previousScene;
     private Rectangle2D screen;
+    private HTTPReceiver server;
 
 
     @FXML
@@ -42,8 +44,8 @@ public class MainController {
         addButton.setLayoutY(screen.getHeight() - this.addButton.getPrefHeight() - 50);
     }
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public void setServer(HTTPReceiver server) {
+        this.server = server;
     }
 
     public void setPrimaryStage(Stage primaryStage) {

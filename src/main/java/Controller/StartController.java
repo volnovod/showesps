@@ -38,12 +38,12 @@ public class StartController {
     private List<InetAddress> ipList = new ArrayList<>();
     List<InetAddress> broadcastList = new ArrayList<>();
 
-    private HttpURLConnection connection;
 
     private Stage primaryStage;
     private Scene mainScene;
     private Scene configScene;
     private ConfigController configController;
+    private HTTPReceiver server;
 
     @FXML
     private Pane pane;
@@ -76,10 +76,6 @@ public class StartController {
         this.configScene = configScene;
     }
 
-    public Rectangle2D getScreen() {
-        return screen;
-    }
-
     public void setScreen(Rectangle2D screen) {
         this.screen = screen;
         this.pane.setPrefWidth(screen.getWidth());
@@ -105,8 +101,8 @@ public class StartController {
 
     }
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public void setServer(HTTPReceiver server) {
+        this.server = server;
     }
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -161,22 +157,24 @@ public class StartController {
             });
         }
 
+
+
+
     }
 
     @FXML
     public void connect() {
         deviceAddress = deviceAddress.replaceAll("\\u0000", "");
-        Thread receiver = new Thread(() -> {
-            HTTPReceiver httpReceiver = new HTTPReceiver();
-            httpReceiver.receive();
-            Platform.runLater(() -> resultProcess(httpReceiver.getResult()));
-        });
+        this.server.setAddress(deviceAddress);
+        Thread serverThread = new Thread(() -> server.receive());
+        serverThread.start();
+        this.server.receive();
         Thread httpSender = new Thread(() -> {
             HttpSender sender =new HttpSender( deviceAddress, "who");
             sender.send();
         });
-        receiver.start();
         httpSender.start();
+        System.out.println("GUI " + Thread.currentThread().getId());
     }
 
     public void resultProcess(String result){

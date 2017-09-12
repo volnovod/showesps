@@ -39,9 +39,8 @@ public class UDPListener implements Runnable {
 
             byte[] receiveData = new byte[15];
             socket.joinGroup( new InetSocketAddress("239.1.2.17",SRC_PORT), getInterface());
-            System.out.println(socket.getInterface().getHostName());
             DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
-            socket.setSoTimeout(2000);
+            socket.setSoTimeout(1000);
             socket.receive(recievePacket);
             socket.close();
             updateTable(new String(receiveData, 0, receiveData.length));

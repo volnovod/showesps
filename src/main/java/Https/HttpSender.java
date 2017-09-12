@@ -48,8 +48,10 @@ public class HttpSender  {
         try {
             StringEntity msg = new StringEntity(jsonObject.toString());
             httpPost.setEntity(msg);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(client.execute(httpPost).getEntity().getContent()));
+            HttpResponse response = client.execute(httpPost);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             String result = reader.readLine();
+            reader.close();
             System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,19 +59,4 @@ public class HttpSender  {
 
     }
 
-    public int getDST_PORT() {
-        return DST_PORT;
-    }
-
-    public void setDST_PORT(int DST_PORT) {
-        this.DST_PORT = DST_PORT;
-    }
-
-    public String getDeviceAddress() {
-        return deviceAddress;
-    }
-
-    public void setDeviceAddress(String deviceAddress) {
-        this.deviceAddress = deviceAddress;
-    }
 }

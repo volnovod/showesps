@@ -1,6 +1,7 @@
 import Controller.ConfigController;
 import Controller.MainController;
 import Controller.StartController;
+import Https.HTTPReceiver;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -36,6 +37,12 @@ public class Main extends Application {
         ConfigController configController = configLoader.getController();
         startController.setConfigController(configController);
 
+        HTTPReceiver httpReceiver = new HTTPReceiver();
+        startController.setServer(httpReceiver);
+        configController.setServer(httpReceiver);
+        mainController.setServer(httpReceiver);
+
+
         startController.setMainScene(mainScene);
         startController.setConfigScene(configScene);
         startController.setPrimaryStage(primaryStage);
@@ -62,7 +69,6 @@ public class Main extends Application {
         primaryStage.setScene(startScene);
 //        primaryStage.setScene(configScene);
         primaryStage.show();
-
 
 
     }
