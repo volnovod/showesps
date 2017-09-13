@@ -20,6 +20,10 @@ public class HTTPReceiver {
         return result;
     }
 
+    public JSONObject getJsonObject() {
+        return jsonObject;
+    }
+
     public void receive() {
         HttpServer server = null;
         try {
@@ -31,13 +35,12 @@ public class HTTPReceiver {
             server.setExecutor(null);
             server.start();
 
-            System.out.println("Server " + Thread.currentThread().getId());
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } 
     }
 
-    static class EchoHandler implements HttpHandler {
+    class EchoHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             StringBuilder builder = new StringBuilder();
@@ -47,9 +50,9 @@ public class HTTPReceiver {
             String line;
             while ((line = reader.readLine()) != null)
             {
-                System.out.println(line);
             }
             reader.close();
+            HTTPReceiver.this.jsonObject = new JSONObject(line);
             byte[] bytes = builder.toString().getBytes();
             exchange.sendResponseHeaders(200, bytes.length);
 

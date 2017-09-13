@@ -16,12 +16,9 @@ public class Main extends Application {
 
 
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                Platform.exit();
-                System.exit(0);
-            }
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
         });
 
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("/fxml/startPage.fxml"));
@@ -36,11 +33,6 @@ public class Main extends Application {
         MainController mainController = mainLoader.getController();
         ConfigController configController = configLoader.getController();
         startController.setConfigController(configController);
-
-        HTTPReceiver httpReceiver = new HTTPReceiver();
-        startController.setServer(httpReceiver);
-        configController.setServer(httpReceiver);
-        mainController.setServer(httpReceiver);
 
 
         startController.setMainScene(mainScene);

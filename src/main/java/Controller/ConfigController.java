@@ -17,8 +17,6 @@ public class ConfigController {
     private Rectangle2D screen;
     private String defaultStyle;
     private String deviceAddress;
-    private HTTPReceiver server;
-
     @FXML
     private RadioButton mainDevRadioButton;
 
@@ -62,10 +60,6 @@ public class ConfigController {
         this.deviceAddress = deviceAddress;
     }
 
-    public void setServer(HTTPReceiver server) {
-        this.server = server;
-    }
-
     @FXML
     public void initialize() {
         ToggleGroup radioGroup = new ToggleGroup();
@@ -88,18 +82,11 @@ public class ConfigController {
             }
         });
         this.defaultStyle = mainId.getStyle();
-        System.out.println(defaultStyle);
     }
 
     @FXML
     public void save() {
         if (validate()) {
-
-//            Thread receiver = new Thread(() -> {
-//                HTTPReceiver httpReceiver = new HTTPReceiver();
-//                httpReceiver.receive();
-//                Platform.runLater(() -> System.out.println(httpReceiver.getResult()));
-//            });
 
             Thread configThread = new Thread(() -> {
                 HttpSender sender = new HttpSender(deviceAddress, "networkSetup");
@@ -110,10 +97,13 @@ public class ConfigController {
                             .put("netPassword", password.getText())
                             .put("exNetId", existingSsid.getText())
                             .put("exNetPassword", existingPassword.getText());
+                }else if (simpleDevRadioButton.isSelected()){
+                    sender.getJsonObject().put("id", simpleId.getText())
+                            .put("netId", simpleExistingSsid.getText())
+                            .put("netPassword", simpleExistingPassword.getText());
                 }
                 sender.send();
             });
-//            receiver.start();
             configThread.start();
         }
 

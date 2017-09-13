@@ -34,7 +34,6 @@ public class UDPListener implements Runnable {
 
     public void listenedUdpResponce() throws Exception {
         MulticastSocket socket = new MulticastSocket(SRC_PORT);
-//        Logger lgg = Logger.getLogger(socket.getClass().getName());
         try   {
 
             byte[] receiveData = new byte[15];

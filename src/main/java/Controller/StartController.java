@@ -43,7 +43,6 @@ public class StartController {
     private Scene mainScene;
     private Scene configScene;
     private ConfigController configController;
-    private HTTPReceiver server;
 
     @FXML
     private Pane pane;
@@ -101,9 +100,6 @@ public class StartController {
 
     }
 
-    public void setServer(HTTPReceiver server) {
-        this.server = server;
-    }
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -165,25 +161,20 @@ public class StartController {
     @FXML
     public void connect() {
         deviceAddress = deviceAddress.replaceAll("\\u0000", "");
-        this.server.setAddress(deviceAddress);
-        Thread serverThread = new Thread(() -> server.receive());
-        serverThread.start();
-        this.server.receive();
         Thread httpSender = new Thread(() -> {
             HttpSender sender =new HttpSender( deviceAddress, "who");
             sender.send();
+            Platform.runLater(() -> resultProcess(sender.getJsonObject()));
         });
         httpSender.start();
-        System.out.println("GUI " + Thread.currentThread().getId());
     }
 
-    public void resultProcess(String result){
-        JSONObject jsonResult = new JSONObject(result);
-        if (jsonResult.get("id").equals("0")){
+    public void resultProcess(JSONObject jsonObject){
+        if (jsonObject.get("id").equals("0")){
             this.configController.setDeviceAddress(deviceAddress);
             primaryStage.setScene(getConfigScene());
             primaryStage.show();
-        } else if (!jsonResult.get("id").equals("0")){
+        } else if (!jsonObject.get("id").equals("0")){
             primaryStage.setScene(getMainScene());
             primaryStage.show();
         }

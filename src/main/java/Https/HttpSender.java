@@ -19,6 +19,7 @@ public class HttpSender  {
     private int DST_PORT = 80;
     private String command;
     private JSONObject jsonObject = new JSONObject();
+    private HttpResponse response;
 
 
     private HttpPost httpPost;
@@ -39,7 +40,6 @@ public class HttpSender  {
         this.httpPost = new HttpPost("http://" + this.deviceAddress + ":" + String.valueOf(this.DST_PORT));
         jsonObject.put("command", this.command);
         if (this.command.equals(WHO)){
-            jsonObject.put("port", "10060");
         }else if (this.command.equals(NETWORK_SETUP)){
 
         } else if (this.command.equals(SET)){
@@ -48,10 +48,11 @@ public class HttpSender  {
         try {
             StringEntity msg = new StringEntity(jsonObject.toString());
             httpPost.setEntity(msg);
-            HttpResponse response = client.execute(httpPost);
+            response = client.execute(httpPost);
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             String result = reader.readLine();
             reader.close();
+            jsonObject = new JSONObject(result);
             System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
