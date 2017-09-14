@@ -12,11 +12,12 @@ import java.util.*;
 
 public class UDPListener implements Runnable {
 
-//    static Logger log = Logger.getLogger(UDPListener.class.getName());
+    //    static Logger log = Logger.getLogger(UDPListener.class.getName());
     private final int SRC_PORT = 10054;
     private String localIp;
     TableView<Device> tableView;
     Button scanButton;
+    boolean work = true;
 
     public void setScanButton(Button scanButton) {
         this.scanButton = scanButton;
@@ -34,21 +35,25 @@ public class UDPListener implements Runnable {
 
     public void listenedUdpResponce() throws Exception {
         MulticastSocket socket = new MulticastSocket(SRC_PORT);
-        try   {
+        try {
 
             byte[] receiveData = new byte[15];
-            socket.joinGroup( new InetSocketAddress("239.1.2.17",SRC_PORT), getInterface());
-            DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
+            socket.joinGroup(new InetSocketAddress("239.1.2.17", SRC_PORT), getInterface());
             socket.setSoTimeout(1000);
-            socket.receive(recievePacket);
+            while (work){
+                DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
+
+                socket.receive(recievePacket);
+                System.out.println(new String(recievePacket.getData()));
+                updateTable(new String(receiveData, 0, receiveData.length));
+            }
             socket.close();
-            updateTable(new String(receiveData, 0, receiveData.length));
+            System.out.println("socket close");
 
-
-        } catch (SocketTimeoutException e){
+        } catch (SocketTimeoutException e) {
 
             this.scanButton.setDisable(false);
-        }        catch (SocketException e) {
+        } catch (SocketException e) {
             e.printStackTrace();
 
         } catch (UnknownHostException e) {
@@ -56,7 +61,7 @@ public class UDPListener implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (socket != null){
+            if (socket != null) {
                 socket.close();
             }
         }
@@ -66,9 +71,8 @@ public class UDPListener implements Runnable {
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
 
         for (NetworkInterface netIf : Collections.list(nets)) {
-            for (InetAddress address: Collections.list(netIf.getInetAddresses())){
-                if (address.getHostAddress().equals(localIp)){
-                    System.out.println(netIf.getName());
+            for (InetAddress address : Collections.list(netIf.getInetAddresses())) {
+                if (address.getHostAddress().equals(localIp)) {
                     return netIf;
                 }
             }
@@ -80,10 +84,10 @@ public class UDPListener implements Runnable {
         this.localIp = localIp;
     }
 
-    public void updateTable(String address){
+    public void updateTable(String address) {
         address = address.replaceAll("\u0000", "");
         List<Device> list = new ArrayList<>();
-        int id = this.tableView.getItems().size()+1;
+        int id = this.tableView.getItems().size() + 1;
         list.add(new Device(id, address));
         this.tableView.getItems().clear();
         this.tableView.getItems().addAll(list);

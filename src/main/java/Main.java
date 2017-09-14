@@ -12,6 +12,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+
 public class Main extends Application {
 
 
@@ -33,6 +37,12 @@ public class Main extends Application {
         MainController mainController = mainLoader.getController();
         ConfigController configController = configLoader.getController();
         startController.setConfigController(configController);
+
+//        FileWriter fileWriter = new FileWriter("devices.json");
+//        FileReader fileReader = new FileReader("devices.json");
+//
+//        startController.setFileWriter(fileWriter);
+//        startController.setFileReader(fileReader);
 
 
         startController.setMainScene(mainScene);

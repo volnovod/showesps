@@ -15,8 +15,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.json.JSONObject;
+import jdk.nashorn.internal.scripts.JS;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -43,6 +50,8 @@ public class StartController {
     private Scene mainScene;
     private Scene configScene;
     private ConfigController configController;
+    private FileWriter fileWriter;
+    private FileReader fileReader;
 
     @FXML
     private Pane pane;
@@ -62,6 +71,14 @@ public class StartController {
 
     @FXML
     private ChoiceBox networkList;
+
+    public void setFileWriter(FileWriter fileWriter) {
+        this.fileWriter = fileWriter;
+    }
+
+    public void setFileReader(FileReader fileReader) {
+        this.fileReader = fileReader;
+    }
 
     public void setConfigController(ConfigController configController) {
         this.configController = configController;
@@ -141,12 +158,19 @@ public class StartController {
         addressCol.setCellValueFactory(new PropertyValueFactory<Device, String>("address"));
         devTable.getColumns().addAll(idCol, addressCol);
         setInterfacesList();
+        this.listener = new UDPListener();
+        this.listener.setTableView(this.devTable);
+        this.listener.setScanButton(this.scanButton);
         if (ipList.size() > 0) {
             this.networkList.getItems().addAll(FXCollections.observableList(ipList));
             this.networkList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
                     this.scanButton.setDisable(false);
                     this.localAddress = this.ipList.get(this.networkList.getSelectionModel().getSelectedIndex()).getHostAddress();
+                    this.listener.setLocalIp(this.localAddress);
+                    Thread udpListner = new Thread(this.listener);
+                    udpListner.start();
+
                 } else {
                     this.scanButton.setDisable(true);
                 }
@@ -164,19 +188,57 @@ public class StartController {
         Thread httpSender = new Thread(() -> {
             HttpSender sender =new HttpSender( deviceAddress, "who");
             sender.send();
-            Platform.runLater(() -> resultProcess(sender.getJsonObject()));
+            Platform.runLater(() -> resultProcess(sender.getJsonArray()));
         });
         httpSender.start();
     }
 
-    public void resultProcess(JSONObject jsonObject){
-        if (jsonObject.get("id").equals("0")){
-            this.configController.setDeviceAddress(deviceAddress);
-            primaryStage.setScene(getConfigScene());
-            primaryStage.show();
-        } else if (!jsonObject.get("id").equals("0")){
-            primaryStage.setScene(getMainScene());
-            primaryStage.show();
+    public void resultProcess(JSONArray jsonArray){
+        if (jsonArray.size() > 0){
+            try {
+                for ( int i = 0; i < jsonArray.size(); i++){
+
+                    JSONObject inputObject = (JSONObject) jsonArray.get(i);
+                    JSONParser parser = new JSONParser();
+                    JSONObject devices ;
+                    fileReader = new FileReader("devices.json");
+                    devices = (JSONObject) parser.parse(fileReader);
+                    fileReader.close();
+                    JSONArray savedDevises = (JSONArray) devices.get("devices");
+                    boolean ifSave = true;
+                    for (int j = 0; j < savedDevises.size(); j++){
+                        JSONObject savedDevice = (JSONObject) savedDevises.get(j);
+                        if (savedDevice.get("id").equals(inputObject.get("id"))){
+                            ifSave = false;
+                            break;
+                        }
+                    }
+                    if ( ifSave){
+                        JSONObject onjToSave = inputObject;
+                        onjToSave.put("xpos", "100");
+                        onjToSave.put("ypos", "100");
+                        fileWriter = new FileWriter("devices.json");
+                        savedDevises.add(onjToSave);
+                        devices.put("devices", savedDevises);
+                        fileWriter.write(devices.toJSONString());
+                        fileWriter.close();
+                    }
+                    if (inputObject.get("setup").equals("required")){
+                        this.listener.work = false;
+                        this.configController.setDeviceAddress(deviceAddress);
+                        primaryStage.setScene(getConfigScene());
+                        primaryStage.show();
+                    } else if (!inputObject.get("setup").equals("required")){
+                        this.listener.work = false;
+                        primaryStage.setScene(getMainScene());
+                        primaryStage.show();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -195,8 +257,6 @@ public class StartController {
         this.broadcast = new UdpBroadcast(this.localAddress);
         this.listener.setLocalIp(this.localAddress);
         Thread udpBroadcast = new Thread(this.broadcast);
-        Thread udpListner = new Thread(this.listener);
-        udpListner.start();
         udpBroadcast.start();
 
     }

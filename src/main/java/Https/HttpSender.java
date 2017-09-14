@@ -5,12 +5,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class HttpSender  {
+public class HttpSender {
     final String WHO = "who";
     final String NETWORK_SETUP = "networkSetup";
     final String SET = "set";
@@ -19,6 +21,7 @@ public class HttpSender  {
     private int DST_PORT = 80;
     private String command;
     private JSONObject jsonObject = new JSONObject();
+    private JSONArray jsonArray = new JSONArray();
     private HttpResponse response;
 
 
@@ -30,19 +33,22 @@ public class HttpSender  {
         this.command = command;
     }
 
+    public JSONArray getJsonArray() {
+        return jsonArray;
+    }
 
     public JSONObject getJsonObject() {
         return jsonObject;
     }
 
-    public void send(){
+    public void send() {
         this.client = HttpClientBuilder.create().build();
         this.httpPost = new HttpPost("http://" + this.deviceAddress + ":" + String.valueOf(this.DST_PORT));
         jsonObject.put("command", this.command);
-        if (this.command.equals(WHO)){
-        }else if (this.command.equals(NETWORK_SETUP)){
+        if (this.command.equals(WHO)) {
+        } else if (this.command.equals(NETWORK_SETUP)) {
 
-        } else if (this.command.equals(SET)){
+        } else if (this.command.equals(SET)) {
 
         }
         try {
@@ -52,7 +58,12 @@ public class HttpSender  {
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             String result = reader.readLine();
             reader.close();
-            jsonObject = new JSONObject(result);
+
+            if (this.command.equals(WHO)) {
+                jsonArray = (JSONArray) new JSONParser().parse(result);
+            } else {
+                jsonObject = (JSONObject) new JSONParser().parse(result);
+            }
             System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();

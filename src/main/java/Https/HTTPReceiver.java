@@ -1,7 +1,9 @@
 package Https;
 
 import com.sun.net.httpserver.*;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +54,11 @@ public class HTTPReceiver {
             {
             }
             reader.close();
-            HTTPReceiver.this.jsonObject = new JSONObject(line);
+            try {
+                HTTPReceiver.this.jsonObject = (JSONObject) new JSONParser().parse(line);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             byte[] bytes = builder.toString().getBytes();
             exchange.sendResponseHeaders(200, bytes.length);
 

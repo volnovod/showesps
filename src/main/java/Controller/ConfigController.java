@@ -91,16 +91,14 @@ public class ConfigController {
             Thread configThread = new Thread(() -> {
                 HttpSender sender = new HttpSender(deviceAddress, "networkSetup");
                 if (mainDevRadioButton.isSelected()) {
-                    sender.getJsonObject().put("id", mainId.getText())
-                            .put("groupId", groupId.getText())
-                            .put("netId", ssid.getText())
-                            .put("netPassword", password.getText())
-                            .put("exNetId", existingSsid.getText())
-                            .put("exNetPassword", existingPassword.getText());
+                    sender.getJsonObject().put("groupId", groupId.getText());
+                    sender.getJsonObject().put("netId", ssid.getText());
+                    sender.getJsonObject().put("netPassword", password.getText());
+                    sender.getJsonObject().put("intNetId", existingSsid.getText());
+                    sender.getJsonObject().put("intNetPassword", existingPassword.getText());
                 }else if (simpleDevRadioButton.isSelected()){
-                    sender.getJsonObject().put("id", simpleId.getText())
-                            .put("netId", simpleExistingSsid.getText())
-                            .put("netPassword", simpleExistingPassword.getText());
+                    sender.getJsonObject().put("netId", simpleExistingSsid.getText());
+                    sender.getJsonObject().put("netPassword", simpleExistingPassword.getText());
                 }
                 sender.send();
             });
@@ -114,12 +112,7 @@ public class ConfigController {
         mainDevBoxDefault();
         simpleDevBoxDefault();
         if (mainDevRadioButton.isSelected()) {
-            if (mainId.getText().length() >= 3) {
-                mainId.setStyle(defaultStyle);
-            } else {
-                mainId.setStyle("-fx-border-color:red");
-                result = false;
-            }
+
             if (groupId.getText().length() > 3) {
                 groupId.setStyle(defaultStyle);
             } else {

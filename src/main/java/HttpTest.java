@@ -4,7 +4,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
