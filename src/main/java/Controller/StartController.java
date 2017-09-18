@@ -72,14 +72,6 @@ public class StartController {
     @FXML
     private ChoiceBox networkList;
 
-    public void setFileWriter(FileWriter fileWriter) {
-        this.fileWriter = fileWriter;
-    }
-
-    public void setFileReader(FileReader fileReader) {
-        this.fileReader = fileReader;
-    }
-
     public void setConfigController(ConfigController configController) {
         this.configController = configController;
     }
@@ -180,6 +172,7 @@ public class StartController {
 
 
 
+
     }
 
     @FXML
@@ -214,11 +207,14 @@ public class StartController {
                         }
                     }
                     if ( ifSave){
-                        JSONObject onjToSave = inputObject;
-                        onjToSave.put("xpos", "100");
-                        onjToSave.put("ypos", "100");
+                        System.out.println("Saving device");
+                        JSONObject objToSave = inputObject;
+                        objToSave.put("xpos", "100");
+                        objToSave.put("ypos", "100");
+                        objToSave.remove("command");
+                        objToSave.remove("setup");
                         fileWriter = new FileWriter("devices.json");
-                        savedDevises.add(onjToSave);
+                        savedDevises.add(objToSave);
                         devices.put("devices", savedDevises);
                         fileWriter.write(devices.toJSONString());
                         fileWriter.close();
@@ -226,6 +222,7 @@ public class StartController {
                     if (inputObject.get("setup").equals("required")){
                         this.listener.work = false;
                         this.configController.setDeviceAddress(deviceAddress);
+                        this.configController.setObjectForConfig(inputObject);
                         primaryStage.setScene(getConfigScene());
                         primaryStage.show();
                     } else if (!inputObject.get("setup").equals("required")){

@@ -18,7 +18,7 @@ public class HttpSender {
     final String SET = "set";
 
     private String deviceAddress;
-    private int DST_PORT = 80;
+    private int DST_PORT = 10060;
     private String command;
     private JSONObject jsonObject = new JSONObject();
     private JSONArray jsonArray = new JSONArray();

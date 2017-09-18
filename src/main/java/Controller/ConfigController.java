@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.json.simple.JSONObject;
 
 public class ConfigController {
 
@@ -17,6 +18,7 @@ public class ConfigController {
     private Rectangle2D screen;
     private String defaultStyle;
     private String deviceAddress;
+    private JSONObject objectForConfig;
     @FXML
     private RadioButton mainDevRadioButton;
 
@@ -60,6 +62,14 @@ public class ConfigController {
         this.deviceAddress = deviceAddress;
     }
 
+    public void setObjectForConfig(JSONObject objectForConfig) {
+        this.objectForConfig = objectForConfig;
+        if (this.objectForConfig != null){
+            this.mainId.setText(this.objectForConfig.get("id").toString());
+            this.simpleId.setText(this.objectForConfig.get("id").toString());
+        }
+    }
+
     @FXML
     public void initialize() {
         ToggleGroup radioGroup = new ToggleGroup();
@@ -82,6 +92,9 @@ public class ConfigController {
             }
         });
         this.defaultStyle = mainId.getStyle();
+        this.mainId.setDisable(true);
+        this.simpleId.setDisable(true);
+
     }
 
     @FXML
@@ -91,6 +104,7 @@ public class ConfigController {
             Thread configThread = new Thread(() -> {
                 HttpSender sender = new HttpSender(deviceAddress, "networkSetup");
                 if (mainDevRadioButton.isSelected()) {
+                    sender.getJsonObject().put("id", objectForConfig.get("id").toString());
                     sender.getJsonObject().put("groupId", groupId.getText());
                     sender.getJsonObject().put("netId", ssid.getText());
                     sender.getJsonObject().put("netPassword", password.getText());
@@ -101,6 +115,12 @@ public class ConfigController {
                     sender.getJsonObject().put("netPassword", simpleExistingPassword.getText());
                 }
                 sender.send();
+                Platform.runLater(() -> {
+                    if (sender.getJsonObject().get("status").toString().equals("OK")){
+                        primaryStage.setScene(getStartScene());
+                        primaryStage.show();
+                    }
+                });
             });
             configThread.start();
         }
