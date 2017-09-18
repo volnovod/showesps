@@ -39,7 +39,7 @@ public class MainController {
     public void setScreen(Rectangle2D screen) {
         this.screen = screen;
         image.setLayoutX((screen.getWidth() - image.getFitWidth())/2);
-        image.setLayoutY(((screen.getHeight() - image.getFitHeight())/2));
+        image.setLayoutY(10);
         addButton.setLayoutX(screen.getWidth() - this.addButton.getPrefWidth() - 10);
         addButton.setLayoutY(screen.getHeight() - this.addButton.getPrefHeight() - 50);
     }

@@ -1,6 +1,5 @@
 package Controller;
 
-import Https.HTTPReceiver;
 import Https.HttpSender;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,7 +14,6 @@ public class ConfigController {
 
     private Scene startScene;
     private Stage primaryStage;
-    private Rectangle2D screen;
     private String defaultStyle;
     private String deviceAddress;
     private JSONObject objectForConfig;
@@ -57,6 +55,8 @@ public class ConfigController {
 
     @FXML
     private PasswordField simpleExistingPassword;
+
+
 
     public void setDeviceAddress(String deviceAddress) {
         this.deviceAddress = deviceAddress;
@@ -224,7 +224,7 @@ public class ConfigController {
 
 
     public void setScreen(Rectangle2D screen) {
-        this.screen = screen;
+//        this.screen = screen;
     }
 
     public void setPrimaryStage(Stage primaryStage) {

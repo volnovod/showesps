@@ -1,6 +1,5 @@
 package Controller;
 
-import Https.HTTPReceiver;
 import Https.HttpSender;
 import Model.Device;
 import javafx.application.Platform;
@@ -15,7 +14,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import jdk.nashorn.internal.scripts.JS;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -72,6 +70,9 @@ public class StartController {
     @FXML
     private ChoiceBox networkList;
 
+    @FXML
+    private Button updateNetListButton;
+
     public void setConfigController(ConfigController configController) {
         this.configController = configController;
     }
@@ -105,6 +106,9 @@ public class StartController {
         this.scanButton.setLayoutY(this.connectButton.getLayoutY());
         this.exitButton.setLayoutX(this.scanButton.getLayoutX() + this.scanButton.getWidth() + xStep);
         this.exitButton.setLayoutY(this.connectButton.getLayoutY());
+
+        this.updateNetListButton.setLayoutY(this.networkList.getLayoutY());
+        this.updateNetListButton.setLayoutX(this.networkList.getLayoutX() + this.networkList.getPrefWidth() + 10);
 
 
     }
@@ -173,6 +177,27 @@ public class StartController {
 
 
 
+    }
+
+    @FXML
+    public void updateNetList() {
+//        setInterfacesList();
+//        this.networkList.getItems().clear();
+//        if (ipList.size() > 0) {
+//            this.networkList.getItems().addAll(FXCollections.observableList(ipList));
+//            this.networkList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//                if (newValue != null) {
+//                    this.scanButton.setDisable(false);
+//                    this.localAddress = this.ipList.get(this.networkList.getSelectionModel().getSelectedIndex()).getHostAddress();
+//                    this.listener.setLocalIp(this.localAddress);
+//                    Thread udpListner = new Thread(this.listener);
+//                    udpListner.start();
+//
+//                } else {
+//                    this.scanButton.setDisable(true);
+//                }
+//            });
+//        }
     }
 
     @FXML
@@ -276,7 +301,6 @@ public class StartController {
                             if (!ipList.contains(inetAddress)){
                                 ipList.add(inetAddress);
                             }
-                            broadcastList.add(ia.getBroadcast());
 
                         }
                     }

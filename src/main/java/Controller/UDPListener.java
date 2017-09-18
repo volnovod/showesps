@@ -1,10 +1,9 @@
 package Controller;
 
 import Model.Device;
-import com.sun.javafx.collections.MappingChange;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
@@ -12,7 +11,6 @@ import java.util.*;
 
 public class UDPListener implements Runnable {
 
-    //    static Logger log = Logger.getLogger(UDPListener.class.getName());
     private final int SRC_PORT = 10054;
     private String localIp;
     TableView<Device> tableView;
@@ -39,16 +37,13 @@ public class UDPListener implements Runnable {
 
             byte[] receiveData = new byte[15];
             socket.joinGroup(new InetSocketAddress("239.1.2.17", SRC_PORT), getInterface());
-            socket.setSoTimeout(1000);
             while (work){
                 DatagramPacket recievePacket = new DatagramPacket(receiveData, receiveData.length);
 
                 socket.receive(recievePacket);
-                System.out.println(new String(recievePacket.getData()));
                 updateTable(new String(receiveData, 0, receiveData.length));
             }
             socket.close();
-            System.out.println("socket close");
 
         } catch (SocketTimeoutException e) {
 
@@ -86,13 +81,31 @@ public class UDPListener implements Runnable {
 
     public void updateTable(String address) {
         address = address.replaceAll("\u0000", "");
-        List<Device> list = new ArrayList<>();
-        int id = this.tableView.getItems().size() + 1;
-        list.add(new Device(id, address));
-        this.tableView.getItems().clear();
-        this.tableView.getItems().addAll(list);
-        this.tableView.refresh();
-        this.scanButton.setDisable(false);
+        ObservableList<Device> list = this.tableView.getItems();
+        boolean isContains = false;
+        if (list.size() > 0){
+            for (int i = 0; i < list.size(); i++){
+                Device current = list.get(i);
+                if (current.getAddress().equals(address)){
+                    isContains = true;
+                    break;
+                }
+            }
+        } else {
+            isContains = false;
+        }
+        if (!isContains){
+            int id = 0;
+            if (list.size() == 0){
+                id = 0;
+            }else {
+                id = this.tableView.getItems().size() + 1;
+            }
+//            list.add(new Device(id, address));
+            this.tableView.getItems().add(id, new Device(id+1, address));
+            this.tableView.refresh();
+            this.scanButton.setDisable(false);
+        }
     }
 
     public void setTableView(TableView tableView) {
