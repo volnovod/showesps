@@ -4,6 +4,7 @@ import Https.HttpSender;
 import Model.Device;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -181,23 +182,8 @@ public class StartController {
 
     @FXML
     public void updateNetList() {
-//        setInterfacesList();
-//        this.networkList.getItems().clear();
-//        if (ipList.size() > 0) {
-//            this.networkList.getItems().addAll(FXCollections.observableList(ipList));
-//            this.networkList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//                if (newValue != null) {
-//                    this.scanButton.setDisable(false);
-//                    this.localAddress = this.ipList.get(this.networkList.getSelectionModel().getSelectedIndex()).getHostAddress();
-//                    this.listener.setLocalIp(this.localAddress);
-//                    Thread udpListner = new Thread(this.listener);
-//                    udpListner.start();
-//
-//                } else {
-//                    this.scanButton.setDisable(true);
-//                }
-//            });
-//        }
+        setInterfacesList();
+        this.networkList.setItems(FXCollections.observableList(ipList));
     }
 
     @FXML

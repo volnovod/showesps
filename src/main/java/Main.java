@@ -55,7 +55,9 @@ public class Main extends Application {
         primaryStage.setHeight(primaryScreenBounds.getHeight());
         primaryStage.setResizable(false);
         primaryStage.setScene(startScene);
+//        primaryStage.setScene(mainScene);
         primaryStage.show();
+
 
 
     }
