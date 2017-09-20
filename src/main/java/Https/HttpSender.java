@@ -59,11 +59,11 @@ public class HttpSender {
             String result = reader.readLine();
             reader.close();
 
-            if (this.command.equals(WHO)) {
+//            if (this.command.equals(WHO)) {
                 jsonArray = (JSONArray) new JSONParser().parse(result);
-            } else {
-                jsonObject = (JSONObject) new JSONParser().parse(result);
-            }
+//            } else {
+//                jsonObject = (JSONObject) new JSONParser().parse(result);
+//            }
             System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();

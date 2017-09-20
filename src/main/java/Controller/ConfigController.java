@@ -111,12 +111,13 @@ public class ConfigController {
                     sender.getJsonObject().put("intNetId", existingSsid.getText());
                     sender.getJsonObject().put("intNetPassword", existingPassword.getText());
                 }else if (simpleDevRadioButton.isSelected()){
-                    sender.getJsonObject().put("netId", simpleExistingSsid.getText());
-                    sender.getJsonObject().put("netPassword", simpleExistingPassword.getText());
+                    sender.getJsonObject().put("id", objectForConfig.get("id").toString());
+                    sender.getJsonObject().put("intNetId", simpleExistingSsid.getText());
+                    sender.getJsonObject().put("intNetPassword", simpleExistingPassword.getText());
                 }
                 sender.send();
                 Platform.runLater(() -> {
-                    if (sender.getJsonObject().get("status").toString().equals("OK")){
+                    if (((JSONObject)sender.getJsonArray().get(0)).get("status").toString().equals("OK")){
                         primaryStage.setScene(getStartScene());
                         primaryStage.show();
                     }

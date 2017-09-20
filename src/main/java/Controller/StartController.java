@@ -231,13 +231,13 @@ public class StartController {
                         fileWriter.close();
                     }
                     if (inputObject.get("setup").equals("required")){
-                        this.listener.work = false;
+//                        this.listener.work = false;
                         this.configController.setDeviceAddress(deviceAddress);
                         this.configController.setObjectForConfig(inputObject);
                         primaryStage.setScene(getConfigScene());
                         primaryStage.show();
                     } else if (!inputObject.get("setup").equals("required")){
-                        this.listener.work = false;
+//                        this.listener.work = false;
                         primaryStage.setScene(getMainScene());
                         primaryStage.show();
                     }
