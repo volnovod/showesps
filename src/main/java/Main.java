@@ -30,6 +30,7 @@ public class Main extends Application {
         MainController mainController = mainLoader.getController();
         ConfigController configController = configLoader.getController();
         startController.setConfigController(configController);
+        startController.setMainController(mainController);
 
         startController.setMainScene(mainScene);
         startController.setConfigScene(configScene);

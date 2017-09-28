@@ -40,7 +40,6 @@ public class StartController {
 
     private String deviceAddress;
     private String localAddress;
-    private String json;
     private List<InetAddress> ipList = new ArrayList<>();
     List<InetAddress> broadcastList = new ArrayList<>();
 
@@ -49,6 +48,7 @@ public class StartController {
     private Scene mainScene;
     private Scene configScene;
     private ConfigController configController;
+    private MainController mainController;
     private FileWriter fileWriter;
     private FileReader fileReader;
 
@@ -73,6 +73,10 @@ public class StartController {
 
     @FXML
     private Button updateNetListButton;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     public void setConfigController(ConfigController configController) {
         this.configController = configController;
@@ -204,11 +208,9 @@ public class StartController {
 
                     JSONObject inputObject = (JSONObject) jsonArray.get(i);
                     JSONParser parser = new JSONParser();
-                    JSONObject devices ;
                     fileReader = new FileReader("devices.json");
-                    devices = (JSONObject) parser.parse(fileReader);
+                    JSONArray savedDevises = (JSONArray) parser.parse(fileReader);
                     fileReader.close();
-                    JSONArray savedDevises = (JSONArray) devices.get("devices");
                     boolean ifSave = true;
                     for (int j = 0; j < savedDevises.size(); j++){
                         JSONObject savedDevice = (JSONObject) savedDevises.get(j);
@@ -222,23 +224,22 @@ public class StartController {
                         JSONObject objToSave = inputObject;
                         objToSave.put("xpos", "100");
                         objToSave.put("ypos", "100");
+                        objToSave.put("visible", "no");
                         objToSave.remove("command");
-                        objToSave.remove("setup");
                         fileWriter = new FileWriter("devices.json");
                         savedDevises.add(objToSave);
-                        devices.put("devices", savedDevises);
-                        fileWriter.write(devices.toJSONString());
+                        fileWriter.write(savedDevises.toJSONString());
                         fileWriter.close();
                     }
                     if (inputObject.get("setup").equals("required")){
-//                        this.listener.work = false;
                         this.configController.setDeviceAddress(deviceAddress);
                         this.configController.setObjectForConfig(inputObject);
                         primaryStage.setScene(getConfigScene());
                         primaryStage.show();
                     } else if (!inputObject.get("setup").equals("required")){
-//                        this.listener.work = false;
                         primaryStage.setScene(getMainScene());
+                        this.mainController.setAddress(deviceAddress);
+                        this.mainController.startTimer();
                         primaryStage.show();
                     }
                 }
