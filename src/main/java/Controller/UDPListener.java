@@ -101,7 +101,6 @@ public class UDPListener implements Runnable {
             }else {
                 id = this.tableView.getItems().size() + 1;
             }
-//            list.add(new Device(id, address));
             this.tableView.getItems().add(id, new Device(id+1, address));
             this.tableView.refresh();
             this.scanButton.setDisable(false);

@@ -169,8 +169,8 @@ public class StartController {
                     this.scanButton.setDisable(false);
                     this.localAddress = this.ipList.get(this.networkList.getSelectionModel().getSelectedIndex()).getHostAddress();
                     this.listener.setLocalIp(this.localAddress);
-                    Thread udpListner = new Thread(this.listener);
-                    udpListner.start();
+                    Thread udpListener = new Thread(this.listener);
+                    udpListener.start();
 
                 } else {
                     this.scanButton.setDisable(true);
@@ -193,6 +193,23 @@ public class StartController {
     @FXML
     public void connect() {
         deviceAddress = deviceAddress.replaceAll("\\u0000", "");
+        Thread ping = new Thread(() -> {
+            while (true){
+                try {
+                    InetAddress ip = InetAddress.getByName(deviceAddress);
+                    if (ip.isReachable(5)) {
+//                        System.out.println("Ok");
+                    } else {
+//                        System.out.println("No response");
+                    }
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        ping.start();
         Thread httpSender = new Thread(() -> {
             HttpSender sender =new HttpSender( deviceAddress, "who");
             sender.send();
